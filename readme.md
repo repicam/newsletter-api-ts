@@ -35,3 +35,11 @@ Las rutas que vamos a tener (sobre la URI /api/v1) son las siguientes:
           "name": "your name",
           "email": "youremail@domain.com
         }
+
+ - **/users/:id** (DELETE): Ruta en la que podremos dar de baja usuarios
+
+ - **/users/:id** (PATCH): Ruta en la que podremos modificar preferencias de usuarios (quitarse de la lista)
+    
+        {
+          "unsuscribe": true
+        }
