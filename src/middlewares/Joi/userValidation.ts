@@ -17,3 +17,18 @@ export const userValidationMdlware = ( req: Request, res: Response, next: NextFu
 
   next()
 }
+
+export const userUpdateValidationMdlware = ( req: Request, res: Response, next: NextFunction ) => {
+  const userSchema = Joi.object( {
+    unsubscribe: Joi.boolean().required()
+  } )
+
+  const { error } = userSchema.validate( req.body, { abortEarly: false } )
+
+  if ( error ) {
+    const errorMessage = error.details.map( ( d ) => d.message ).join( ', ' )
+    return res.status( 400 ).json( { message: errorMessage } )
+  }
+
+  next()
+}
