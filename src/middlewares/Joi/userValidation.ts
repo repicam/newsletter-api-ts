@@ -19,11 +19,11 @@ export const userValidationMdlware = ( req: Request, res: Response, next: NextFu
 }
 
 export const userUpdateValidationMdlware = ( req: Request, res: Response, next: NextFunction ) => {
-  const userSchema = Joi.object( {
+  const userSubsSchema = Joi.object( {
     unsubscribe: Joi.boolean().required()
   } )
 
-  const { error } = userSchema.validate( req.body, { abortEarly: false } )
+  const { error } = userSubsSchema.validate( req.body, { abortEarly: false } )
 
   if ( error ) {
     const errorMessage = error.details.map( ( d ) => d.message ).join( ', ' )

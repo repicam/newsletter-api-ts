@@ -43,3 +43,10 @@ Las rutas que vamos a tener (sobre la URI /api/v1) son las siguientes:
         {
           "unsuscribe": true
         }
+
+ - **/cron/** (POST): Ruta en la que podremos iniciar o parar un cron
+    
+        {
+          "action": "stop",
+          "cron": "monthly"
+        }
