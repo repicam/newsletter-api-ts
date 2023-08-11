@@ -32,3 +32,20 @@ export const userUpdateValidationMdlware = ( req: Request, res: Response, next: 
 
   next()
 }
+
+export const newAdminValidationMdlware = ( req: Request, res: Response, next: NextFunction ) => {
+  const userSchema = Joi.object( {
+    email: Joi.string().email().required(),
+    username: Joi.string().required(),
+    password: Joi.string().required().min( 10 )
+  } )
+
+  const { error } = userSchema.validate( req.body, { abortEarly: false } )
+
+  if ( error ) {
+    const errorMessage = error.details.map( ( d ) => d.message ).join( ', ' )
+    return res.status( 400 ).json( { message: errorMessage } )
+  }
+
+  next()
+}

@@ -1,8 +1,12 @@
-import { UserBodyI, UserI } from '../interfaces/user'
+import { AdminBodyI, UserBodyI, UserI } from '../interfaces/user'
 import userService from '../services/userService'
 
 const createNewUser = async ( userData: UserBodyI ): Promise<UserBodyI> => {
-  return await userService.createUserAndSendMail( userData )
+  try {
+    return await userService.createUserAndSendMail( userData )
+  } catch ( error ) {
+    throw error
+  }
 }
 
 const getAllUsers = async (): Promise<UserBodyI[]> => {
@@ -11,7 +15,7 @@ const getAllUsers = async (): Promise<UserBodyI[]> => {
 
 const deleteUser = async ( id: string ): Promise<void> => {
   const user: UserI | null = await userService.getUserById( id )
-  if ( !user )
+  if ( !user || user.isAdmin )
     throw 'No se encontró el usuario a eliminar'
 
   try {
@@ -23,7 +27,7 @@ const deleteUser = async ( id: string ): Promise<void> => {
 
 const updateUser = async ( id: string, unsubscribe: boolean ): Promise<void> => {
   const user: UserI | null = await userService.getUserById( id )
-  if ( !user )
+  if ( !user || user.isAdmin )
     throw 'No se encontró el usuario a modificar'
 
   try {
@@ -33,7 +37,15 @@ const updateUser = async ( id: string, unsubscribe: boolean ): Promise<void> => 
   }
 }
 
+const createNewAdmin = async ( userData: AdminBodyI ): Promise<void> => {
+  try {
+    await userService.checkAndCreateAdmin( userData )
+  } catch ( error ) {
+    throw error
+  }
+}
+
 export default {
-  createNewUser, getAllUsers, deleteUser, updateUser
+  createNewUser, getAllUsers, deleteUser, updateUser, createNewAdmin
 }
 

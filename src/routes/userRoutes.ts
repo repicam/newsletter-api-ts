@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express'
-import { userValidationMdlware, userUpdateValidationMdlware } from '../middlewares/Joi/userValidation'
+import { userValidationMdlware, userUpdateValidationMdlware, newAdminValidationMdlware } from '../middlewares/Joi/userValidation'
 import userController from '../controllers/userController'
 
 const router = Router()
@@ -39,6 +39,15 @@ router.patch( '/:id', userUpdateValidationMdlware, async ( req: Request, res: Re
   try {
     await userController.updateUser( id, unsubscribe )
     res.status( 200 ).json( { success: 'OK' } )
+  } catch ( error ) {
+    res.status( 400 ).json( { success: 'KO', error } )
+  }
+} )
+
+router.post( '/admin/new', newAdminValidationMdlware, async ( req: Request, res: Response ) => {
+  try {
+    await userController.createNewAdmin( req.body )
+    res.status( 201 ).json( { success: 'OK' } )
   } catch ( error ) {
     res.status( 400 ).json( { success: 'KO', error } )
   }

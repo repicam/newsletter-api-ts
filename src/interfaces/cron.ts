@@ -3,12 +3,12 @@ export enum CronEnum {
   Monthly = 'monthly'
 }
 
-export enum CronActionEnum {
+export enum ActionEnum {
   Start = 'start',
   Stop = 'stop'
 }
 
 export interface CronBodyI {
-  cron: string,
-  action: string
+  cron: CronEnum,
+  action: ActionEnum
 }

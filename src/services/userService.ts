@@ -1,16 +1,16 @@
-import { UserBodyI, UserI } from '../interfaces/user'
+import { AdminBodyI, UserBodyI, UserI } from '../interfaces/user'
 import userRespository from '../repositories/userRepository'
 
 const getUsersByFilter = async ( filter = {} ): Promise<UserBodyI[]> => {
   const dataList = await userRespository.find( filter )
   return dataList.map( ( user ) => {
-    const { name, email, ...rest } = user
+    const { name, email } = user
     return { name, email }
   } )
 }
 
 const createUserAndSendMail = async ( data: UserBodyI ): Promise<UserBodyI> => {
-  const { name, email, ...rest } = await createUser( data )
+  const { name, email } = await createUser( data )
   //enviar mail de bienvenida
   return { name, email }
 }
@@ -52,6 +52,29 @@ const updateUserById = async ( user: UserI ): Promise<UserI | null> => {
   return updatedUser
 }
 
+const getAdminList = async ( filter = {} ): Promise<AdminBodyI[]> => {
+  return await userRespository.find( filter )
+}
+
+const adminExists = async ( username: string ): Promise<AdminBodyI> => {
+  const adminSearch = await getAdminList( { username } )
+  return adminSearch[ 0 ]
+}
+
+const checkAndCreateAdmin = async ( data: AdminBodyI ): Promise<void> => {
+  const adminList = await getAdminList( { isAdmin: true } )
+  if ( adminList.length > 0 )
+    throw 'Ya hay un administrador'
+
+  //hash password
+  data.isAdmin = true
+  await userRespository.create( data )
+
+  //return token
+}
+
 export default {
-  getUsersByFilter, createUserAndSendMail, deleteUserAndSendMail, getUserById, updateUserAndSendMail
+  getUsersByFilter, createUserAndSendMail,
+  deleteUserAndSendMail, getUserById, updateUserAndSendMail,
+  adminExists, checkAndCreateAdmin
 }

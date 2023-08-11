@@ -1,12 +1,12 @@
-import { CronActionEnum, CronBodyI } from '../interfaces/cron'
+import { ActionEnum, CronBodyI } from '../interfaces/cron'
 import { activateCronByString, stopCronByString } from '../services/cronService'
 
 const modifyCron = ( cronBody: CronBodyI ) => {
   switch ( cronBody.action ) {
-    case CronActionEnum.Start:
+    case ActionEnum.Start:
       activateCronByString( cronBody.cron )
       break
-    case CronActionEnum.Stop:
+    case ActionEnum.Stop:
       stopCronByString( cronBody.cron )
       break
     default:

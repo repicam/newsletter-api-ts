@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose'
 
-
 const userSchema = new Schema( {
   name: {
     type: String,
-    required: true
+    required: true,
+    default: 'Admin'
   },
   email: {
     type: String,
@@ -13,7 +13,23 @@ const userSchema = new Schema( {
   },
   isActive: {
     type: Boolean,
-    default: true
+    default: true,
+    select: false
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+    select: false
+  },
+  password: {
+    type: String,
+    select: false,
+    default: '-'
+  },
+  username: {
+    type: String,
+    select: false,
+    default: '-'
   }
 }, {
   versionKey: false,
