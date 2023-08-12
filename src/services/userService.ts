@@ -1,5 +1,6 @@
 import { UserBodyI, UserI } from '../interfaces/user'
 import userRespository from '../repositories/userRepository'
+import emailService from './emailService'
 
 const getUsersByFilter = async ( filter = {} ): Promise<UserBodyI[]> => {
   const dataList = await userRespository.find( filter )
@@ -11,7 +12,7 @@ const getUsersByFilter = async ( filter = {} ): Promise<UserBodyI[]> => {
 
 const createUserAndSendMail = async ( data: UserBodyI ): Promise<UserBodyI> => {
   const { name, email, ...rest } = await createUser( data )
-  //enviar mail de bienvenida
+  emailService.welcomeEmail( { name, email } )
   return { name, email }
 }
 
@@ -20,16 +21,17 @@ const createUser = async ( data: UserBodyI ): Promise<UserI> => {
 }
 
 const deleteUserAndSendMail = async ( id: string ): Promise<void> => {
-  const isUserDeleted: boolean = await deleteUserById( id )
-  if ( !isUserDeleted )
+  const deletedUser: UserI | null = await deleteUserById( id )
+  if ( !deletedUser )
     throw 'Ha habido un problema borrando el usuario'
 
-  //enviar mail de confirmacion
+  const { name, email, ...rest } = deletedUser
+
+  emailService.deleteUserEmail( { name, email } )
 }
 
-const deleteUserById = async ( id: string ): Promise<boolean> => {
-  const deletedUser = await userRespository.deleteById( id )
-  return !!deletedUser
+const deleteUserById = async ( id: string ): Promise<UserI | null> => {
+  return await userRespository.deleteById( id )
 }
 
 const getUserById = async ( id: string ): Promise<UserI | null> => {
@@ -44,7 +46,7 @@ const updateUserAndSendMail = async ( user: UserI, unsubscribe: boolean ): Promi
   if ( !userUpdated )
     throw 'Ha habido un problema modificando el usuario'
 
-  //enviar mail de confirmacion cambio
+  emailService.updatePreferencesEmail( userUpdated )
 }
 
 const updateUserById = async ( user: UserI ): Promise<UserI | null> => {

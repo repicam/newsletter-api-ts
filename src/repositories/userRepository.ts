@@ -18,7 +18,7 @@ const findById = async ( id: string ): Promise<UserI | null> => {
 }
 
 const updateById = async ( data: UserI ): Promise<UserI | null> => {
-  return await User.findByIdAndUpdate( data._id, data )
+  return await User.findByIdAndUpdate( data._id, data, { new: true } )
 }
 
 export default {

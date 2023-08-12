@@ -1,12 +1,13 @@
-import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
+
+import express from 'express'
 import { connectDB } from './configs/db'
 
 import userRoutes from './routes/userRoutes'
 import cronRoutes from './routes/cronRoutes'
 import { cronDailyNewsletter, cronReactivateUser } from './services/cronService'
 
-dotenv.config()
 connectDB()
 
 const app = express()
